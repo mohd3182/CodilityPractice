@@ -16,18 +16,18 @@ public class Attendee {
 
     private int attendeeId;
     private String attendeeName;
-    private int shiftStartSlot;
-    private int shiftEndSlot;
+    private int shiftStartHour;
+    private int shiftEndHour;
     private long[] occupiedSlots;
 
     public Attendee() {
     }
 
-    public Attendee(int attendeeId, String attendeeName, int shiftStartSlot, int shiftEndSlot, TimeSlot[] occupiedSlots) {
+    public Attendee(int attendeeId, String attendeeName, int shiftStartHour, int shiftEndHour, TimeSlot[] occupiedSlots) {
         this.attendeeId = attendeeId;
         this.attendeeName = attendeeName;
-        this.shiftStartSlot = shiftStartSlot;
-        this.shiftEndSlot = shiftEndSlot;
+        this.shiftStartHour = shiftStartHour;
+        this.shiftEndHour = shiftEndHour;
 
 
         long[] occSolt = new long[occupiedSlots.length];
@@ -57,20 +57,20 @@ public class Attendee {
         this.attendeeName = attendeeName;
     }
 
-    public int getShiftStartSlot() {
-        return shiftStartSlot;
+    public int getShiftStartHour() {
+        return shiftStartHour;
     }
 
-    public void setShiftStartSlot(int shiftStartSlot) {
-        this.shiftStartSlot = shiftStartSlot;
+    public void setShiftStartHour(int shiftStartHour) {
+        this.shiftStartHour = shiftStartHour;
     }
 
-    public int getShiftEndSlot() {
-        return shiftEndSlot;
+    public int getShiftEndHour() {
+        return shiftEndHour;
     }
 
-    public void setShiftEndSlot(int shiftEndSlot) {
-        this.shiftEndSlot = shiftEndSlot;
+    public void setShiftEndHour(int shiftEndHour) {
+        this.shiftEndHour = shiftEndHour;
     }
 
     public long[] getOccupiedSlots() {

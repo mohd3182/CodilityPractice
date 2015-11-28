@@ -29,22 +29,22 @@ public class WikiaTest {
         // TODO code application logic here
 
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 9);
+        calendar.set(Calendar.HOUR_OF_DAY, 8);
         calendar.set(Calendar.MINUTE, 0);
         System.out.println("Date is :" + calendar.getTime());
 
         Calendar calendar2 = Calendar.getInstance();
-        calendar2.set(Calendar.HOUR_OF_DAY, 10);
+        calendar2.set(Calendar.HOUR_OF_DAY, 12);
         calendar2.set(Calendar.MINUTE, 0);
         System.out.println("Date 2 is :" + calendar2.getTime());
 
-        TimeSlot[] arr = {new TimeSlot(new GregorianCalendar(2015, 10, 27, 9, 24, 56)), new TimeSlot(new GregorianCalendar(2015, 10, 26, 11, 24, 56))};
+        TimeSlot[] arr = {new TimeSlot(new GregorianCalendar(2015, 10, 28, 9, 24, 56)), new TimeSlot(new GregorianCalendar(2015, 10, 27, 11, 28, 56))};
         Attendee attendee1 = new Attendee(1234, "Elbert John", 9, 17, arr);
 
-        TimeSlot[] arr2 = {new TimeSlot(new GregorianCalendar(2015, 10, 27, 10, 24, 56)), new TimeSlot(new GregorianCalendar(2015, 10, 26, 11, 24, 56))};
+        TimeSlot[] arr2 = {new TimeSlot(new GregorianCalendar(2015, 10, 28, 9, 24, 56)), new TimeSlot(new GregorianCalendar(2015, 10, 27, 11, 28, 56))};
         Attendee attendee2 = new Attendee(2654, "Danny Scott", 8, 15, arr2);
 
-        TimeSlot[] arr3 = {new TimeSlot(new GregorianCalendar(2015, 10, 27, 11, 24, 56))};
+        TimeSlot[] arr3 = {new TimeSlot(new GregorianCalendar(2015, 10, 28, 11, 24, 56))};
         Attendee attendee3 = new Attendee(3654, "Diana Adam", 9, 17, arr3);
 
         List attendees = new ArrayList();
@@ -73,6 +73,9 @@ public class WikiaTest {
         List allTimes = new ArrayList();
 
         int slotAccumulatedTotal = 0;
+
+        List tempTimes = new ArrayList();
+        List resultTimes = new ArrayList();
         for (long i = fromTime.getTimeInMillis(); i < toTime.getTimeInMillis();) {
             int maxAttendeesCount = attendees.size();
             int attendeesCount = attendees.size();
@@ -83,23 +86,32 @@ public class WikiaTest {
             System.out.println("Date Calendar is :" + calendar.getTime());
             for (Attendee attendee : attendees) {
 
-                if (Arrays.stream(attendee.getOccupiedSlots()).anyMatch(l -> l >= calendar.getTimeInMillis() && l <= calendar.getTimeInMillis() + (30 * 1000 * 60))) {
+                Calendar endSlot = Calendar.getInstance();
+                endSlot.setTimeInMillis(calendar.getTimeInMillis() + (30 * 1000 * 60));
+                if (Arrays.stream(attendee.getOccupiedSlots()).anyMatch(l -> (l >= calendar.getTimeInMillis() && l <= calendar.getTimeInMillis() + (30 * 1000 * 60))
+                        || calendar.get(Calendar.HOUR_OF_DAY) < attendee.getShiftStartHour() || endSlot.get(Calendar.HOUR_OF_DAY) > attendee.getShiftEndHour())) {
                     attendeesCount--;
                 }
 
             }
-
+            MeetingSlot meetingSlot = new MeetingSlot(calendar, attendeesCount, slotAccumulatedTotal, "");
             if (maxAttendeesCount == attendeesCount) {
                 slotAccumulatedTotal++;
+
+                tempTimes.add(meetingSlot);
+                if (slotAccumulatedTotal >= meetingLength.ordinal()) {
+                    resultTimes.addAll(tempTimes);
+                    tempTimes.clear();
+                }
+
             } else {
                 slotAccumulatedTotal = 0;
             }
 
-            MeetingSlot meetingSlot = new MeetingSlot(calendar, slotAccumulatedTotal, attendeesCount, "");
             allTimes.add(meetingSlot);
             i = i + (30 * 1000 * 60);
         }
 
-        return allTimes;
+        return resultTimes;
     }
 }
